@@ -4,19 +4,24 @@ from entidade.pedido import Pedido
 
 class Relatorio:
     def __init__(self, data: Date):
-        pass
+        self.__pedidos = []
+        self.__data = None
+        if isinstance(data, Date):
+            self.__data = data
 
     @property
     def data(self):
-        pass
+        return self.__data
 
     @data.setter
     def data(self, data: Date):
-        pass
+        if isinstance(data, Date):
+            self.__data = data
 
     @property
     def pedidos(self):
-        pass
+        return self.__pedidos
 
     def incluir_pedido(self, pedido: Pedido):
-        pass
+        if isinstance(pedido, Pedido):
+            self.__pedidos.append(pedido)
