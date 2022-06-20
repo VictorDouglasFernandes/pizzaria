@@ -2,20 +2,27 @@
 
 class Ingrediente:
     def __init__(self, id: int, nome: str):
-        pass
+        self.__id = None
+        self.__nome = None
+        if isinstance(id, int):
+            self.__id = id
+        if isinstance(nome, str):
+            self.__nome = nome
 
     @property
     def id(self):
-        pass
+        return self.__id
 
     @id.setter
     def id(self, id: int):
-        pass
+        if isinstance(id, int):
+            self.__id = id
 
     @property
     def nome(self):
-        pass
+        return self.__nome
 
     @nome.setter
     def nome(self, nome: str):
-        pass
+        if isinstance(nome, str):
+            self.__nome = nome
