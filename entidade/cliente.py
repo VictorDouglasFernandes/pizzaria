@@ -3,12 +3,16 @@ from entidade.pessoa import Pessoa
 
 class Cliente(Pessoa):
     def __init__(self, nome: str, cpf: str, endereco: str):
-        pass
+        super().__init__(nome, cpf)
+        self.__endereco = None
+        if isinstance(endereco, str):
+            self.__endereco = endereco
 
     @property
     def endereco(self):
-        pass
+        return self.__endereco
 
     @endereco.setter
     def endereco(self, endereco: str):
-        pass
+        if isinstance(endereco, str):
+            self.__endereco
