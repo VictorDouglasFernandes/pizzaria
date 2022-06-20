@@ -7,50 +7,73 @@ class Pedido:
     ultimo_id = 0
 
     def __init__(self, cliente: Cliente, endereco: str, pagamento: str, data: Date):
-        pass
+        self.__pizzas = []
+        Pedido.ultimo_id = Pedido.ultimo_id + 1
+        self.__id = Pedido.ultimo_id
+
+        self.__cliente = None
+        self.__endereco = None
+        self.__pagamento = None
+        self.__data = None
+
+        if isinstance(cliente, Cliente):
+            self.__cliente = cliente
+        if isinstance(endereco, str):
+            self.__endereco = endereco
+        if isinstance(pagamento, str):
+            self.__pagamento = pagamento
+        if isinstance(data, Date):
+            self.__data = data
 
     @property
     def id(self):
-        pass
+        return self.__id
 
     @property
     def pizzas(self):
-        pass
+        return self.__pizzas
 
     def incluir_pizza(self, pizza: Pizza):
-        pass
+        if isinstance(pizza, Pizza):
+            self.__pizzas.append(pizza)
+            return pizza
 
     def excluir_pizza(self, pizza: Pizza):
-        pass
+        if isinstance(pizza, Pizza):
+            self.__pizzas.remove(pizza)
 
     @property
     def cliente(self):
-        pass
+        return self.__cliente
 
     @cliente.setter
     def cliente(self, cliente: Cliente):
-        pass
+        if isinstance(cliente, Cliente):
+            self.__cliente = cliente
 
     @property
     def endereco(self):
-        pass
+        return self.__endereco
 
     @endereco.setter
     def endereco(self, endereco: str):
-        pass
+        if isinstance(endereco, str):
+            self.__endereco = endereco
 
     @property
     def pagamento(self):
-        pass
+        return self.__pagamento
 
     @pagamento.setter
     def pagamento(self, pagamento: str):
-        pass
+        if isinstance(pagamento, str):
+            self.__pagamento = pagamento
 
     @property
     def data(self):
-        pass
+        return self.__data
 
     @data.setter
     def data(self, data: Date):
-        pass
+        if isinstance(data, Date):
+            self.__data = data
