@@ -19,13 +19,12 @@ class ControleSistema:
         self.__controle_relatorio = ControleRelatorio(self.__controle_pedido)
 
     def iniciar(self):
-        self.__tela_sistema.bem_vindo()
         self.logar()
 
     def logar(self):
         retorno = self.__tela_sistema.logar()
-        if retorno["cpf"] == "" and retorno["senha"] == "":
-            exit()
+        if retorno["cpf"] is None and retorno["senha"] is None:
+            exit(0)
         for funcionario in self.__funcionarios:
             if funcionario.cpf == retorno["cpf"]:
                 if funcionario.senha == retorno["senha"]:
