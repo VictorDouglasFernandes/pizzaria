@@ -17,7 +17,7 @@ class TelaSistema(Tela):
             [sg.Radio('Relatório', "RD1", key='5')],
             [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
         ]
-        self.__window = sg.Window('Sistema de livros').Layout(layout)
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
         opcao = 0
         if values['1']:
