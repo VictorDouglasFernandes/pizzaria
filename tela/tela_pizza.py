@@ -1,4 +1,6 @@
 from tela.tela import Tela
+from excecao.valor_ingrediente_invalido_excecao import ValorIngredienteInvalidoExcecao
+from excecao.valor_invalido_excecao import ValorInvalidoExcecao
 import PySimpleGUI as sg
 
 
@@ -8,7 +10,7 @@ class TelaPizza(Tela):
 
     def menu(self):
         layout = [
-            [sg.Text('Tela sistema', font=("Helvica", 25))],
+            [sg.Text('Tela Pizzas', font=("Helvica", 25))],
             [sg.Text('Escolha sua opção', font=("Helvica", 15))],
             [sg.Radio('Listar', "RD1", key='1')],
             [sg.Radio('Adicionar', "RD1", key='2')],
@@ -32,18 +34,6 @@ class TelaPizza(Tela):
         self.__window.Close()
         return opcao
 
-    def pegar_id_ingredientes(self):
-        while True:
-            try:
-                print("Separados por vírgula x,y,z,...")
-                id_ingredientes = input("ID ingredientes: ")
-                id_ingredientes = [
-                    int(id) for id in id_ingredientes.split(",")
-                ]
-                return id_ingredientes
-            except:
-                print("Valor inválido")
-
     def adicionar(self):
         layout = [
             [sg.Text('Adicionar Pizza', font=("Helvica", 25))],
@@ -58,67 +48,93 @@ class TelaPizza(Tela):
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
         self.__window.close()
-        print(values)
-        # print("==== Adicionar Pizza ====")
-        # nome = input("Nome: ")
-        # sabor = input("Sabor: ")
-        # borda = input("Borda: ")
-        # id_ingredientes = self.pegar_id_ingredientes()
-        # while True:
-        #     try:
-        #         preco = float(input("Preço: "))
-        #         break
-        #     except:
-        #         print("Valor inválido")
+        try:
+            ingredientes = [int(id) for id in values['ingredientes'].split(",")]
+        except:
+            raise ValorIngredienteInvalidoExcecao()
+        try:
+            preco = float(values['preco'])
+        except:
+            raise ValorInvalidoExcecao()
 
-        # return {
-        #     "nome": nome,
-        #     "sabor": sabor,
-        #     "borda": borda,
-        #     "id_ingredientes": id_ingredientes,
-        #     "preco": preco
-        # }
+        return {
+            "nome": values['nome'],
+            "sabor": values['sabor'],
+            "borda": values['borda'],
+            "id_ingredientes": ingredientes,
+            "preco": preco
+        }
 
     def pegar_nome_sabor_borda(self):
+        layout = [
+            [sg.Text('Buscar Pizza', font=("Helvica", 25))],
+            [sg.Text('Nome: '), sg.In(key='nome')],
+            [sg.Text('Sabor: '), sg.In(key='sabor')],
+            [sg.Text('Borda: '), sg.In(key='borda')],
+            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+        ]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        button, values = self.__window.Read()
+        self.__window.close()
+
+        return {
+            "nome": values['nome'],
+            "sabor": values['sabor'],
+            "borda": values['borda'],
+        }
         nome = input("Nome: ")
         sabor = input("Sabor: ")
         borda = input("Borda: ")
         return {"nome": nome, "sabor": sabor, "borda": borda}
 
     def alterar(self):
-        print("==== Alterar Pizza ====")
-        nome = input("Nome: ")
-        sabor = input("Sabor: ")
-        borda = input("Borda: ")
-        id_ingredientes = self.pegar_id_ingredientes()
-        while True:
-            try:
-                preco = float(input("Preço: "))
-                break
-            except:
-                print("Valor inválido")
+        layout = [
+            [sg.Text('Alterar Pizza', font=("Helvica", 25))],
+            [sg.Text('Nome: '), sg.In(key='nome')],
+            [sg.Text('Sabor: '), sg.In(key='sabor')],
+            [sg.Text('Borda: '), sg.In(key='borda')],
+            [sg.Text('* Separados por vírgular ex.: 1,3,4,7')],
+            [sg.Text('Ingredientes: '), sg.In(key='ingredientes', size=(40, 1))],
+            [sg.Text('Preço: '), sg.In(key='preco')],
+            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+        ]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        button, values = self.__window.Read()
+        self.__window.close()
+        try:
+            ingredientes = [int(id) for id in values['ingredientes'].split(",")]
+        except:
+            raise ValorIngredienteInvalidoExcecao()
+        try:
+            preco = float(values['preco'])
+        except:
+            raise ValorInvalidoExcecao()
+
         return {
-            "nome": nome,
-            "sabor": sabor,
-            "borda": borda,
-            "id_ingredientes": id_ingredientes,
+            "nome": values['nome'],
+            "sabor": values['sabor'],
+            "borda": values['borda'],
+            "id_ingredientes": ingredientes,
             "preco": preco
         }
 
-    def mostrar_pizza(self, pizza):
-        layout = [
-            [sg.Text('Detalhes', font=("Helvica", 15))],
-            [sg.Text('ID:' + str(pizza.id))],
-            [sg.Text('Nome:' + pizza.nome)],
-            [sg.Text('Sabor:' + pizza.sabor)],
-            [sg.Text('Borda:' + pizza.borda)],
-            [sg.Text('Ingredientes:' + ",".join([str(x) for x in pizza.id_ingredientes]))],
-            [sg.Text('Preço:' + str(pizza.preco))],
-            [sg.Button('Voltar')]
-        ]
+    def mostrar_pizzas(self, pizzas):
+        column = [[sg.Text('Detalhes', font=("Helvica", 15))]]
+        for pizza in pizzas:
+            column.extend([
+                [sg.Text('- - - -')],
+                [sg.Text('ID:' + str(pizza.id))],
+                [sg.Text('Nome:' + pizza.nome)],
+                [sg.Text('Sabor:' + pizza.sabor)],
+                [sg.Text('Borda:' + pizza.borda)],
+                [sg.Text('Ingredientes:' + ",".join([str(x) for x in pizza.id_ingredientes]))],
+                [sg.Text('Preço:' + str(pizza.preco))],
+            ])
+        column.append([sg.Button('Voltar')])
+        layout = [[sg.Column(column, scrollable=True, vertical_scroll_only=True)]]
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         self.__window.Read()
         self.__window.close()
 
     def mensagem(self, mensagem: str):
-        print(mensagem)
+        sg.popup('', mensagem)

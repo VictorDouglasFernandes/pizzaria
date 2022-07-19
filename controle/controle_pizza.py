@@ -1,5 +1,7 @@
 from tela.tela_pizza import TelaPizza
 from entidade.pizza import Pizza
+from excecao.valor_ingrediente_invalido_excecao import ValorIngredienteInvalidoExcecao
+from excecao.valor_invalido_excecao import ValorInvalidoExcecao
 
 
 class ControlePizza:
@@ -25,12 +27,17 @@ class ControlePizza:
         self.menu()
 
     def adicionar(self):
-        retorno = self.__tela_pizza.adicionar()
+        try:
+            retorno = self.__tela_pizza.adicionar()
+        except ValorIngredienteInvalidoExcecao:
+            return self.__tela_pizza.mensagem('Valor de ingrediente inválido')
+        except ValorInvalidoExcecao:
+            return self.__tela_pizza.mensagem('Valor de preço inválido')
         for pizza in self.__pizzas:
             if (pizza.nome.upper() == retorno["nome"].upper()
                     and pizza.sabor.upper() == retorno["sabor"].upper()
                     and pizza.borda.upper() == retorno["borda"].upper()):
-                self.__tela_pizza.mensagem("Pizza já cadastrada")
+                return self.__tela_pizza.mensagem("Pizza já cadastrada")
         else:
             pizza = Pizza(retorno["nome"], retorno["sabor"], retorno["borda"],
                           retorno["preco"])
@@ -44,10 +51,14 @@ class ControlePizza:
         retorno = self.__tela_pizza.pegar_nome_sabor_borda()
         for pizza in self.__pizzas:
             if pizza.nome == retorno["nome"] and pizza.sabor == retorno["sabor"] and pizza.borda == retorno["borda"]:
-                retorno = self.__tela_pizza.alterar()
+                try:
+                    retorno = self.__tela_pizza.alterar()
+                except ValorIngredienteInvalidoExcecao:
+                    return self.__tela_pizza.mensagem('Valor de ingrediente inválido')
+                except ValorInvalidoExcecao:
+                    return self.__tela_pizza.mensagem('Valor de preço inválido')
                 pizza.nome = retorno["nome"]
                 pizza.sabor = retorno["sabor"]
-                print(retorno["borda"])
                 pizza.borda = retorno["borda"]
                 pizza.preco = retorno["preco"]
                 for id in pizza.id_ingredientes:
@@ -72,7 +83,6 @@ class ControlePizza:
 
     def listar(self):
         if self.__pizzas:
-            for pizza in self.__pizzas:
-                self.__tela_pizza.mostrar_pizza(pizza)
+            self.__tela_pizza.mostrar_pizzas(self.__pizzas)
         else:
             self.__tela_pizza.mensagem("Sem pizzas")
