@@ -7,7 +7,7 @@ class TelaCliente(Tela):
 
     def menu(self):
         layout = [
-            [sg.Text('Tela sistema', font=("Helvica", 25))],
+            [sg.Text('Tela Cliente', font=("Helvica", 25))],
             [sg.Text('Escolha sua opção', font=("Helvica", 15))],
             [sg.Radio('Listar', "RD1", key='1')],
             [sg.Radio('Adicionar', "RD1", key='2')],
@@ -32,45 +32,66 @@ class TelaCliente(Tela):
         return opcao
     
     def adicionar(self):
-        print("==== Adicionar Cliente ====")
-        nome = input("Nome: ")
-        cpf = input("CPF: ")
-        endereco = input("Endereço: ")
-        return {"nome": nome, "cpf": cpf, "endereco": endereco}
         layout = [
             [sg.Text('Adicionar Cliente', font=("Helvica", 25))],
-            [sg.Text('Nome: '), sg.In(key='1')],
-            [sg.Text('CPF: '), sg.In(key='2')],
-            [sg.Text('Endereço: '), sg.In(key='3')],
+            [sg.Text('Nome: '), sg.In(key='nome')],
+            [sg.Text('CPF: '), sg.In(key='cpf')],
+            [sg.Text('Endereço: '), sg.In(key='endereco')],
             [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
         ]
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
-        opcao = 0
-        if values['1']:
-            opcao = 1
-        elif values['2']:
-            opcao = 2
-        elif values['3']:
-            opcao = 3
-        if button in (None, 'Cancelar'):
-            opcao = 0
         self.__window.close()
-        return opcao
+        return {
+            "nome": values['nome'],
+            'cpf': values['cpf'],
+            'endereco': values['endereco']
+            }
 
     def pegar_cpf(self):
-        return input("CPF: ")
+        layout = [
+            [sg.Text('Buscar CPF', font=("Helvica", 25))],
+            [sg.Text('CPF'), sg.In(key='cpf')],
+            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+        ]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        button, values = self.__window.Read()
+        self.__window.close()
+        return {
+            "cpf": values['cpf']
+        }
 
     def alterar(self):
-        print("==== Alterar Cliente ====")
-        nome = input("Nome: ")
-        cpf = input("CPF: ")
-        endereco = input("Endereço: ")
-        return {"nome": nome, "cpf": cpf, "endereco": endereco}
+        layout = [
+            [sg.Text('Alterar Cliente', font=("Helvica", 25))],
+            [sg.Text('Nome: '), sg.In(key='nome')],
+            [sg.Text('CPF: '), sg.In(key='cpf')],
+            [sg.Text('Endereço: '), sg.In(key='endereco')],
+            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+            ]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        button, values = self.__window.Read()
+        self.__window.close()
+        return {
+            "nome": values['nome'],
+            'cpf': values['cpf'],
+            'endereco': values['endereco']
+            }
+        
+    def mostrar_cliente(self, clientes):
+        column = [[sg.Text('Detalhes', font=("Helvica", 20))]]
+        for cliente in clientes:
+            column.extend([
+                [sg.Text('- - - -')],
+                [sg.Text('Nome:' + str(cliente.nome))],
+                [sg.Text('CPF:' + cliente.cpf)],
+            ])
+        column.append([sg.Button('Voltar')])
+        layout = [[sg.Column(column, scrollable=True, vertical_scroll_only=True)]]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        self.__window.Read()
+        self.__window.close()
 
-    def mostrar_cliente(self, cliente):
-      print("Nome:", cliente.nome)
-      print("CPF: ", cliente.cpf, "\n")
 
     def mensagem(self, mensagem: str):
-        print(mensagem)
+        sg.popup('', mensagem)
