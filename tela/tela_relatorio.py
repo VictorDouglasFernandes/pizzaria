@@ -1,47 +1,62 @@
 from tela.tela import Tela
 from datetime import datetime
+import PySimpleGUI as sg
 
 
 class TelaRelatorio(Tela):
     def __init__(self):
-        pass
+        self.__window = None
 
     def menu(self):
-        while True:
-            try:
-                print("==== Tela Relatório ====")
-                print("1 - Gerar Relatório")
-                self.retornar()
-                opcao = int(input())
-                if isinstance(opcao, int):
-                    if opcao == 0 or opcao == 1:
-                        return opcao
-            except:
-                pass
+        layout = [
+            [sg.Text('Tela Relatório', font=("Helvica", 25))],
+            [sg.Text('Escolha sua opção', font=("Helvica", 15))],
+            [sg.Radio('Gerar relatório', "RD1", key='1')],
+            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+        ]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        button, values = self.__window.Read()
+        opcao = 0
+        if values['1']:
+            opcao = 1
+        if button in (None, 'Cancelar'):
+            opcao = 0
+        self.__window.Close()
+        return opcao
 
     def gerar_relatorio(self):
-        while True:
-            try:
-                data = input("Data (DD/MM/AAAA): ")
-                data = datetime.strptime(data, "%d/%m/%Y")
-                return data
-            except:
-                print("Valor inválido")
+        layout = [
+            [sg.Text('Gerar relatório', font=("Helvica", 15))],
+            [sg.Text('Data (DD/MM/AAAA): '), sg.In(key='data')],
+            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+        ]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        button, values = self.__window.Read()
+        self.__window.Close()
+        return datetime.strptime(values['data'], "%d/%m/%Y")
 
     def mostrar_relatorio(self, relatorio):
-        print("|=== Relatório ===|")
-        print("Data: ", relatorio.data.strftime("%d/%m/%Y"), "\n")
-        print("Pedidos:\n")
+        column = []
         for pedido in relatorio.pedidos:
-            print("ID: ", pedido.id)
-            print("Data: ", pedido.data.strftime("%d/%m/%Y"))
-            print("CPF cliente: ", pedido.cliente.cpf)
-            print("Endereco: ", pedido.endereco)
-            print("Pagamento: ", pedido.pagamento)
-            print("Pizzas:")
+            column.extend([
+                [sg.Text('- - - -')],
+                [sg.Text('ID: ' + str(pedido.id))],
+                [sg.Text('CPF cliente: ' + pedido.cliente.cpf)],
+                [sg.Text('Endereco: ' + pedido.endereco)],
+                [sg.Text('Pagamento: ' + pedido.pagamento)],
+                [sg.Text('Pizzas: ')],
+            ])
             for pizza in pedido.pizzas:
-                print("- ", pizza.nome)
-            print("\n")
+                column.append([sg.Text(' - ' + pizza.nome)])
 
-    def mensagem(self, mensagem):
-        print(mensagem)
+        layout = [
+            [sg.Text('Detalhes' + relatorio.data.strftime("%d/%m/%Y"), font=("Helvica", 15))],
+            [sg.Column(column, scrollable=True, vertical_scroll_only=True)],
+            [sg.Button('Voltar')],
+        ]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        self.__window.Read()
+        self.__window.close()
+
+    def mensagem(self, mensagem: str):
+        sg.popup('', mensagem)
