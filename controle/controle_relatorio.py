@@ -19,7 +19,10 @@ class ControleRelatorio:
         self.menu()
 
     def gerar_relatorio(self):
-        data = self.__tela_relatorio.gerar_relatorio()
+        try:
+            data = self.__tela_relatorio.gerar_relatorio()
+        except:
+            return self.__tela_relatorio.mensagem("Valor de data inválido")
 
         relatorio = Relatorio(data)
         for pedido in self.__controle_pedido.pedidos:
