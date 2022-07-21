@@ -80,15 +80,18 @@ class TelaIngrediente(Tela):
         return {"id": id, "nome": values['nome']}
 
     def mostrar_ingredientes(self, ingredientes):
-        column = [[sg.Text('Detalhes', font=("Helvica", 15))]]
+        column = []
         for ingrediente in ingredientes:
             column.extend([
                 [sg.Text('- - - -')],
                 [sg.Text('ID:' + str(ingrediente.id))],
                 [sg.Text('Nome:' + ingrediente.nome)],
             ])
-        column.append([sg.Button('Voltar')])
-        layout = [[sg.Column(column, scrollable=True, vertical_scroll_only=True)]]
+        layout = [
+            [sg.Text('Detalhes', font=("Helvica", 15))],
+            [sg.Column(column, scrollable=True, vertical_scroll_only=True, size=(200, 250))],
+            [sg.Button('Voltar')],
+        ]
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         self.__window.Read()
         self.__window.close()
