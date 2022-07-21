@@ -82,10 +82,6 @@ class TelaPizza(Tela):
             "sabor": values['sabor'],
             "borda": values['borda'],
         }
-        nome = input("Nome: ")
-        sabor = input("Sabor: ")
-        borda = input("Borda: ")
-        return {"nome": nome, "sabor": sabor, "borda": borda}
 
     def alterar(self):
         layout = [
