@@ -49,7 +49,17 @@ class TelaCliente(Tela):
             }
 
     def pegar_cpf(self):
-        return input("CPF: ")
+        layout = [
+            [sg.Text('Buscar CPF', font=("Helvica", 25))],
+            [sg.Text('CPF'), sg.In(key='cpf')],
+            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+        ]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        button, values = self.__window.Read()
+        self.__window.close()
+        return {
+            "cpf": values['cpf']
+        }
 
     def alterar(self):
         layout = [
@@ -68,9 +78,20 @@ class TelaCliente(Tela):
             'endereco': values['endereco']
             }
         
-    def mostrar_cliente(self, cliente):
-      print("Nome:", cliente.nome)
-      print("CPF: ", cliente.cpf, "\n")
+    def mostrar_cliente(self, clientes):
+        column = [[sg.Text('Detalhes', font=("Helvica", 20))]]
+        for cliente in clientes:
+            column.extend([
+                [sg.Text('- - - -')],
+                [sg.Text('Nome:' + str(cliente.nome))],
+                [sg.Text('CPF:' + cliente.cpf)],
+            ])
+        column.append([sg.Button('Voltar')])
+        layout = [[sg.Column(column, scrollable=True, vertical_scroll_only=True)]]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        self.__window.Read()
+        self.__window.close()
+
 
     def mensagem(self, mensagem: str):
         sg.popup('', mensagem)

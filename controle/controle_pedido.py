@@ -43,6 +43,7 @@ class ControlePedido:
         pedido = Pedido(cliente_selecionado, retorno["endereco"],
                         retorno["pagamento"], data)
 
+        print(retorno['pizzas'])
         for pizza in retorno["pizzas"]:
             for pizza_cadastrada in self.__controle_pizza.pizzas:
                 if pizza_cadastrada.id == pizza:
@@ -103,7 +104,6 @@ class ControlePedido:
 
     def listar(self):
         if self.__pedidos:
-            for pedido in self.__pedidos:
-                self.__tela_pedido.mostrar_pedido(pedido)
+            self.__tela_pedido.mostrar_pedido(self.__pedidos)
         else:
             self.__tela_pedido.mensagem("Sem pedidos")

@@ -50,7 +50,7 @@ class ControleCliente:
     def excluir(self):
         cpf = self.__tela_cliente.pegar_cpf()
         for cliente in self.__clientes:
-            if cliente.cpf == cpf:
+            if cliente.cpf == cpf['cpf']:
                 self.__clientes.remove(cliente)
                 self.__tela_cliente.mensagem("Cliente excluido com sucesso")
                 return
@@ -59,7 +59,6 @@ class ControleCliente:
 
     def listar(self):
         if self.__clientes:
-          for cliente in self.__clientes:
-              self.__tela_cliente.mostrar_cliente(cliente)
+            self.__tela_cliente.mostrar_cliente(self.__clientes)
         else:
             self.__tela_cliente.mensagem("Sem clientes")
