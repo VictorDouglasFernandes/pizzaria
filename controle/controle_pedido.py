@@ -1,12 +1,13 @@
 from tela.tela_pedido import TelaPedido
 from entidade.pedido import Pedido
 from datetime import datetime
+from dao.dao_pizza import DAOPizza
 
 
 class ControlePedido:
     def __init__(self, controle_pizza, controle_cliente):
         self.__tela_pedido = TelaPedido()
-        self.__controle_pizza = controle_pizza
+        self.__dao_pizza = DAOPizza()
         self.__controle_cliente = controle_cliente
         self.__pedidos = []
 
@@ -45,7 +46,7 @@ class ControlePedido:
 
         print(retorno['pizzas'])
         for pizza in retorno["pizzas"]:
-            for pizza_cadastrada in self.__controle_pizza.pizzas:
+            for pizza_cadastrada in self.__dao_pizza.get_all():
                 if pizza_cadastrada.id == pizza:
                     pedido.incluir_pizza(pizza_cadastrada)
         if not pedido.pizzas:
@@ -72,7 +73,7 @@ class ControlePedido:
                     return
 
                 for pizza in retorno["pizzas"]:
-                    for pizza_cadastrada in self.__controle_pizza.pizzas:
+                    for pizza_cadastrada in self.__dao_pizza.get_all():
                         if pizza_cadastrada.id == pizza:
                             pizzas.append(pizza_cadastrada)
                 if not pizzas:
