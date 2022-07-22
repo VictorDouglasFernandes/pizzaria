@@ -95,6 +95,3 @@ class TelaIngrediente(Tela):
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         self.__window.Read()
         self.__window.close()
-
-    def mensagem(self, mensagem: str):
-        sg.popup('', mensagem)

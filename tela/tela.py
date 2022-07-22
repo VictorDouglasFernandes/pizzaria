@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import PySimpleGUI as sg
 
 
 class Tela(ABC):
@@ -10,5 +11,5 @@ class Tela(ABC):
     def menu(self):
         pass
 
-    def retornar(self):
-        print("0 - Retornar")
+    def mensagem(self, mensagem: str):
+        sg.popup('', mensagem)
