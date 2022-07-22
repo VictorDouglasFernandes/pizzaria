@@ -44,7 +44,6 @@ class ControlePedido:
         pedido = Pedido(cliente_selecionado, retorno["endereco"],
                         retorno["pagamento"], data)
 
-        print(retorno['pizzas'])
         for pizza in retorno["pizzas"]:
             for pizza_cadastrada in self.__dao_pizza.get_all():
                 if pizza_cadastrada.id == pizza:
@@ -59,7 +58,7 @@ class ControlePedido:
     def alterar(self):
         id = self.__tela_pedido.pegar_id()
         for pedido in self.__pedidos:
-            if pedido.id == id:
+            if pedido.id == int(id['id']):
                 retorno = self.__tela_pedido.alterar()
 
                 cliente_selecionado = None
@@ -82,7 +81,7 @@ class ControlePedido:
 
                 pedido.cliente = cliente_selecionado
                 pedido.endereco = retorno["endereco"]
-                pedido.pagamento = ["pagamento"]
+                pedido.pagamento = retorno["pagamento"]
                 for pizza in pedido.pizzas:
                     pedido.excluir_pizza(pizza)
                 for pizza in pizzas:
@@ -96,7 +95,7 @@ class ControlePedido:
     def excluir(self):
         id = self.__tela_pedido.pegar_id()
         for pedido in self.__pedidos:
-            if pedido.id == id:
+            if pedido.id == int(id['id']):
                 self.__pedidos.remove(pedido)
                 self.__tela_pedido.mensagem("Pedido excluido com sucesso")
                 return

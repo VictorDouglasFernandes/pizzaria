@@ -32,27 +32,19 @@ class TelaPedido(Tela):
         return opcao
 
     def pegar_id(self):
-        while True:
-            try:
-                id = int(input("ID: "))
-                return id
-            except:
-                print("Valor inválido")
+        layout = [
+            [sg.Text('Digite o ID abaixo', font=("Helvica", 25))],
+            [sg.Text('ID: '), sg.In(key='id')],
+            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+        ]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        button, values = self.__window.Read()
+        self.__window.close()
+        return {"id": values['id']}
 
-    def pegar_id_pizzas(self):
-        while True:
-            try:
-                print("Separados por vírgula x,y,z,...")
-                id_pizzas = input("ID pizzas: ")
-                id_pizzas = [
-                    int(id) for id in id_pizzas.split(",")
-                ]
-                return id_pizzas
-            except:
-                print("Valor inválido")
+
     
     def adicionar(self):
-        #pizzas = self.pegar_id_pizzas()
         layout = [
             [sg.Text('Adicionar Pedido', font=("Helvica", 25))],
             [sg.Text('CPF cliente: '), sg.In(key='cpf_cliente')],
@@ -65,37 +57,51 @@ class TelaPedido(Tela):
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
         self.__window.close()
+        pizzas = [int(id) for id in values['pizzas'].split(",")]
         return {
             "cpf_cliente": values['cpf_cliente'],
             "endereco": values['endereco'],
             "pagamento": values['pagamento'],
-            "pizzas": values['pizzas']
+            "pizzas": pizzas
         }
 
     def alterar(self):
-        print("==== Alterar Pedido ====")
-        cpf_cliente = input("CPF cliente: ")
-        pizzas = self.pegar_id_pizzas()
-        endereco = input("Endereço: ")
-        pagamento = input("Pagamento: ")
-
+        layout = [
+            [sg.Text('Alterar Pedido', font=("Helvica", 25))],
+            [sg.Text('CPF Cliente: '), sg.In(key='cpf_cliente')],
+            [sg.Text('* Separados por vírgular ex.: 1,3,4,7')],
+            [sg.Text('Pizzas: '), sg.In(key='pizzas', size=(40, 1))],
+            [sg.Text('Endereço: '), sg.In(key='endereco')],
+            [sg.Text('Pagamento: '), sg.In(key='pagamento')],
+            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+        ]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        button, values = self.__window.Read()
+        self.__window.close()
+        pizzas = [int(id) for id in values['pizzas'].split(",")]
         return {
-            "cpf_cliente": cpf_cliente,
-            "pizzas": pizzas,
-            "endereco": endereco,
-            "pagamento": pagamento,
+            "cpf_cliente": values['cpf_cliente'],
+            "endereco": values['endereco'],
+            "pagamento": values['pagamento'],
+            "pizzas": pizzas
         }
 
-    def mostrar_pedido(self, pedido):
-        print("ID: ", pedido.id)
-        print("Data: ", pedido.data)
-        print("CPF cliente: ", pedido.cliente.cpf)
-        print("Endereco: ", pedido.endereco)
-        print("Pagamento: ", pedido.pagamento)
-        print("Pizzas:")
-        for pizza in pedido.pizzas:
-            print("- ", pizza.nome)
-        print("\n")
+    def mostrar_pedido(self, pedidos):
+        column = [[sg.Text('Detalhes', font=("Helvica", 15))]]
+        for pedido in pedidos:
+            column.extend([
+                [sg.Text('- - - -')],
+                [sg.Text('ID:' + str(pedido.id))],
+                [sg.Text('CPF Cliente:' + pedido.cliente.cpf)],
+                [sg.Text('Endereco:' + pedido.endereco)],
+                [sg.Text('Pagamento:' + pedido.pagamento)],
+                [sg.Text('Pizzas: ' + ",".join([x.nome for x in pedido.pizzas]))],
+            ])
+        column.append([sg.Button('Voltar')])
+        layout = [[sg.Column(column, scrollable=True, vertical_scroll_only=True)]]
+        self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
+        self.__window.Read()
+        self.__window.close()
     
     def mensagem(self, mensagem: str):
         sg.popup('', mensagem)

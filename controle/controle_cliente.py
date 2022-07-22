@@ -37,7 +37,7 @@ class ControleCliente:
     def alterar(self):
         cpf = self.__tela_cliente.pegar_cpf()
         for cliente in self.__clientes:
-            if cliente.cpf == cpf:
+            if cliente.cpf == str(cpf['cpf']):
                 retorno = self.__tela_cliente.alterar()
                 cliente.nome = retorno["nome"]
                 cliente.cpf = retorno["cpf"]
