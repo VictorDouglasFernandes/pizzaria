@@ -2,6 +2,7 @@ from tela.tela_pedido import TelaPedido
 from entidade.pedido import Pedido
 from datetime import datetime
 from dao.dao_pizza import DAOPizza
+from dao.dao_pedido import DAOPedido
 
 
 class ControlePedido:
@@ -9,6 +10,7 @@ class ControlePedido:
         self.__tela_pedido = TelaPedido()
         self.__dao_pizza = DAOPizza()
         self.__controle_cliente = controle_cliente
+        self.__dao_pedido = DAOPedido()
         self.__pedidos = []
 
     @property
