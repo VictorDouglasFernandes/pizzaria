@@ -69,7 +69,7 @@ class ControlePedido:
             return self.__tela_pedido.mensagem('Valor inválido de id')
         if id == 0:
             return
-        for pedido in self.__dao_pizza.get_all():
+        for pedido in self.__dao_pedido.get_all():
             if pedido.id == id['id']:
                 try:
                     retorno = self.__tela_pedido.alterar()
