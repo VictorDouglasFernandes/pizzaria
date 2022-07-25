@@ -47,6 +47,3 @@ class TelaSistema(Tela):
         button, values = self.__window.Read()
         self.__window.Close()
         return values
-
-    def mensagem(self, mensagem: str):
-        sg.popup('', mensagem)
