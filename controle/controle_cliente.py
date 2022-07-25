@@ -1,11 +1,12 @@
 from tela.tela_cliente import TelaCliente
 from entidade.cliente import Cliente
-
+from dao.dao_cliente import DAOCliente
 
 class ControleCliente:
     def __init__(self):
         self.__tela_cliente = TelaCliente()
         self.__clientes = [Cliente("Fulano", "1", "Rua 123")]
+        self.__dao_cliente = DAOCliente()
 
     @property
     def clientes(self):
@@ -24,24 +25,28 @@ class ControleCliente:
 
     def adicionar(self):
         retorno = self.__tela_cliente.adicionar()
-        for cliente in self.__clientes:
+        if retorno == 0:
+            return
+        for cliente in self.__dao_cliente.get_all():
             if cliente.cpf == retorno["cpf"]:
                 self.__tela_cliente.mensagem("CPF já cadastrado")
         else:
             cliente = Cliente(retorno["nome"],
                               retorno["cpf"],
                               retorno["endereco"])
-            self.__clientes.append(cliente)
+            self.__dao_cliente.add(cliente)
             self.__tela_cliente.mensagem("Cliente adicionado com sucesso")
 
     def alterar(self):
         cpf = self.__tela_cliente.pegar_cpf()
-        for cliente in self.__clientes:
-            if cliente.cpf == cpf:
+        for cliente in self.__dao_cliente.get_all():
+            if cliente.cpf == cpf['cpf']:
                 retorno = self.__tela_cliente.alterar()
+                self.__dao_cliente.remove(cliente.cpf)
                 cliente.nome = retorno["nome"]
                 cliente.cpf = retorno["cpf"]
                 cliente.endereco = retorno["endereco"]
+                self.__dao_cliente.add(cliente)
                 self.__tela_cliente.mensagem("Cliente alterado com sucesso")
                 return
         else:
@@ -49,17 +54,16 @@ class ControleCliente:
 
     def excluir(self):
         cpf = self.__tela_cliente.pegar_cpf()
-        for cliente in self.__clientes:
-            if cliente.cpf == cpf:
-                self.__clientes.remove(cliente)
+        for cliente in self.__dao_cliente.get_all():
+            if cliente.cpf == cpf['cpf']:
+                self.__dao_cliente.remove(cliente.cpf)
                 self.__tela_cliente.mensagem("Cliente excluido com sucesso")
                 return
         else:
             self.__tela_cliente.mensagem("Cliente não encontrado")
 
     def listar(self):
-        if self.__clientes:
-          for cliente in self.__clientes:
-              self.__tela_cliente.mostrar_cliente(cliente)
+        if self.__dao_cliente.get_all():
+            self.__tela_cliente.mostrar_cliente(self.__dao_cliente.get_all())
         else:
             self.__tela_cliente.mensagem("Sem clientes")
