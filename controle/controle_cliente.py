@@ -38,6 +38,8 @@ class ControleCliente:
 
     def alterar(self):
         cpf = self.__tela_cliente.pegar_cpf()
+        if cpf == 0:
+            return
         for cliente in self.__dao_cliente.get_all():
             if cliente.cpf == cpf['cpf']:
                 retorno = self.__tela_cliente.alterar()
@@ -53,6 +55,8 @@ class ControleCliente:
 
     def excluir(self):
         cpf = self.__tela_cliente.pegar_cpf()
+        if cpf == 0:
+            return
         for cliente in self.__dao_cliente.get_all():
             if cliente.cpf == cpf['cpf']:
                 self.__dao_cliente.remove(cliente.cpf)

@@ -1,5 +1,6 @@
 from tela.tela import Tela
 import PySimpleGUI as sg
+from excecao.valor_invalido_excecao import ValorInvalidoExcecao
 
 class TelaPedido(Tela):
     def __init__(self):
@@ -40,10 +41,14 @@ class TelaPedido(Tela):
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
         self.__window.close()
-        return {"id": values['id']}
+        if button in (None, 'Cancelar'):
+            return 0
+        try:
+            id = int(values['id'])
+        except:
+            raise ValorInvalidoExcecao()
+        return {"id": id}
 
-
-    
     def adicionar(self):
         layout = [
             [sg.Text('Adicionar Pedido', font=("Helvica", 25))],
@@ -57,7 +62,12 @@ class TelaPedido(Tela):
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
         self.__window.close()
-        pizzas = [int(id) for id in values['pizzas'].split(",")]
+        if button in (None, 'Cancelar'):
+            return 0
+        try:
+            pizzas = [int(id) for id in values['pizzas'].split(",")]
+        except:
+            raise ValorInvalidoExcecao()
         return {
             "cpf_cliente": values['cpf_cliente'],
             "endereco": values['endereco'],
@@ -78,7 +88,12 @@ class TelaPedido(Tela):
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
         self.__window.close()
-        pizzas = [int(id) for id in values['pizzas'].split(",")]
+        if button in (None, 'Cancelar'):
+            return 0
+        try:
+            pizzas = [int(id) for id in values['pizzas'].split(",")]
+        except:
+            raise ValorInvalidoExcecao()
         return {
             "cpf_cliente": values['cpf_cliente'],
             "endereco": values['endereco'],

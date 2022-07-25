@@ -2,6 +2,9 @@ from tela.tela_pedido import TelaPedido
 from entidade.pedido import Pedido
 from datetime import datetime
 from dao.dao_pedido import DAOPedido
+from dao.dao_pizza import DAOPizza
+from dao.dao_cliente import DAOCliente
+from excecao.valor_invalido_excecao import ValorInvalidoExcecao
 
 
 class ControlePedido:
@@ -29,8 +32,12 @@ class ControlePedido:
         self.menu()
 
     def adicionar(self):
-        retorno = self.__tela_pedido.adicionar()
-
+        try:
+            retorno = self.__tela_pedido.adicionar()
+        except ValorInvalidoExcecao:
+            return self.__tela_pedido.mensagem('Valor inválido de pizza')
+        if retorno == 0:
+            return
         cliente_selecionado = None
         
         for cliente in self.__dao_cliente.get_all():
@@ -56,10 +63,18 @@ class ControlePedido:
         self.__tela_pedido.mensagem("Pedido adicionado com sucesso")
 
     def alterar(self):
-        id = self.__tela_pedido.pegar_id()
+        try:
+            id = self.__tela_pedido.pegar_id()
+        except ValorInvalidoExcecao:
+            return self.__tela_pedido.mensagem('Valor inválido de id')
+        if id == 0:
+            return
         for pedido in self.__dao_pizza.get_all():
-            if pedido.id == int(id['id']):
-                retorno = self.__tela_pedido.alterar()
+            if pedido.id == id['id']:
+                try:
+                    retorno = self.__tela_pedido.alterar()
+                except ValorInvalidoExcecao:
+                    return self.__tela_pedido.mensagem('Valor inválido de pizza')
 
                 cliente_selecionado = None
                 pizzas = []
@@ -96,6 +111,8 @@ class ControlePedido:
 
     def excluir(self):
         id = self.__tela_pedido.pegar_id()
+        if id == 0:
+            return
         for pedido in self.__dao_pedido.get_all():
             if pedido.id == int(id['id']):
                 self.__dao_pedido.remove(pedido.id)

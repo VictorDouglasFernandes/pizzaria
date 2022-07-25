@@ -25,6 +25,8 @@ class ControleIngrediente:
             retorno = self.__tela_ingrediente.adicionar()
         except ValorInvalidoExcecao:
             return self.__tela_ingrediente.mensagem('Valor de ID inválido')
+        if retorno == 0:
+            return
         for ingrediente in self.__dao_ingrediente.get_all():
             if ingrediente.id == retorno["id"]:
                 return self.__tela_ingrediente.mensagem("ID já cadastrado")
@@ -38,6 +40,8 @@ class ControleIngrediente:
             id = self.__tela_ingrediente.pegar_id()
         except ValorInvalidoExcecao:
             return self.__tela_ingrediente.mensagem('Valor de ID inválido')
+        if id == 0:
+            return
         for ingrediente in self.__dao_ingrediente.get_all():
             if ingrediente.id == id:
                 retorno = self.__tela_ingrediente.alterar()
@@ -58,6 +62,8 @@ class ControleIngrediente:
             id = self.__tela_ingrediente.pegar_id()
         except ValorInvalidoExcecao:
             return self.__tela_ingrediente.mensagem('Valor de ID inválido')
+        if id == 0:
+            return
         for ingrediente in self.__dao_ingrediente.get_all():
             if ingrediente.id == id:
                 self.__dao_ingrediente.remove(ingrediente.id)

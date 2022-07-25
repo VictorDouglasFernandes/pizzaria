@@ -42,6 +42,8 @@ class TelaCliente(Tela):
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
         self.__window.close()
+        if button in (None, 'Cancelar'):
+            return 0
         return {
             "nome": values['nome'],
             'cpf': values['cpf'],
@@ -57,6 +59,8 @@ class TelaCliente(Tela):
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
         self.__window.close()
+        if button in (None, 'Cancelar'):
+            return 0
         return {
             "cpf": values['cpf']
         }
@@ -72,6 +76,8 @@ class TelaCliente(Tela):
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
         self.__window.close()
+        if button in (None, 'Cancelar'):
+            return 0
         return {
             "nome": values['nome'],
             'cpf': values['cpf'],

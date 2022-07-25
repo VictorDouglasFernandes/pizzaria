@@ -43,6 +43,8 @@ class TelaIngrediente(Tela):
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
         self.__window.close()
+        if button in (None, 'Cancelar'):
+            return 0
         try:
             id = int(values['id'])
         except:
@@ -58,6 +60,8 @@ class TelaIngrediente(Tela):
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
         self.__window.close()
+        if button in (None, 'Cancelar'):
+            return 0
         try:
             return int(values['id'])
         except:
@@ -73,6 +77,8 @@ class TelaIngrediente(Tela):
         self.__window = sg.Window('Sistema Pizzaria').Layout(layout)
         button, values = self.__window.Read()
         self.__window.close()
+        if button in (None, 'Cancelar'):
+            return 0
         try:
             id = int(values['id'])
         except:

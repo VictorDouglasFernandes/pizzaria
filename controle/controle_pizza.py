@@ -34,6 +34,8 @@ class ControlePizza:
             return self.__tela_pizza.mensagem('Valor de ingrediente inválido')
         except ValorInvalidoExcecao:
             return self.__tela_pizza.mensagem('Valor de preço inválido')
+        if retorno == 0:
+            return
         for pizza in self.__dao_pizza.get_all():
             if (pizza.nome.upper() == retorno["nome"].upper()
                     and pizza.sabor.upper() == retorno["sabor"].upper()
@@ -50,6 +52,8 @@ class ControlePizza:
 
     def alterar(self):
         retorno = self.__tela_pizza.pegar_nome_sabor_borda()
+        if retorno == 0:
+            return
         for pizza in self.__dao_pizza.get_all():
             if pizza.nome == retorno["nome"] and pizza.sabor == retorno["sabor"] and pizza.borda == retorno["borda"]:
                 try:
@@ -75,6 +79,8 @@ class ControlePizza:
 
     def excluir(self):
         retorno = self.__tela_pizza.pegar_nome_sabor_borda()
+        if retorno == 0:
+            return
         for pizza in self.__dao_pizza.get_all():
             if pizza.nome == retorno["nome"] and pizza.sabor == retorno["sabor"] and pizza.borda == retorno["borda"]:
 
