@@ -1,15 +1,15 @@
 from tela.tela_pedido import TelaPedido
 from entidade.pedido import Pedido
 from datetime import datetime
-from dao.dao_pizza import DAOPizza
+from dao.dao_pedido import DAOPedido
 
 
 class ControlePedido:
     def __init__(self, controle_pizza, controle_cliente):
         self.__tela_pedido = TelaPedido()
         self.__dao_pizza = DAOPizza()
-        self.__controle_cliente = controle_cliente
-        self.__pedidos = []
+        self.__dao_cliente = DAOCliente()
+        self.__dao_pedido = DAOPedido()
 
     @property
     def pedidos(self):
@@ -32,8 +32,8 @@ class ControlePedido:
         retorno = self.__tela_pedido.adicionar()
 
         cliente_selecionado = None
-
-        for cliente in self.__controle_cliente.clientes:
+        
+        for cliente in self.__dao_cliente.get_all():
             if cliente.cpf == retorno["cpf_cliente"]:
                 cliente_selecionado = cliente
         if cliente_selecionado is None:
@@ -52,19 +52,19 @@ class ControlePedido:
             self.__tela_pedido.mensagem("Pizzas não encontradas")
             return
 
-        self.__pedidos.append(pedido)
+        self.__dao_pedido.add(pedido)
         self.__tela_pedido.mensagem("Pedido adicionado com sucesso")
 
     def alterar(self):
         id = self.__tela_pedido.pegar_id()
-        for pedido in self.__pedidos:
+        for pedido in self.__dao_pizza.get_all():
             if pedido.id == int(id['id']):
                 retorno = self.__tela_pedido.alterar()
 
                 cliente_selecionado = None
                 pizzas = []
 
-                for cliente in self.__controle_cliente.clientes:
+                for cliente in self.__dao_cliente.get_all():
                     if cliente.cpf == retorno["cpf_cliente"]:
                         cliente_selecionado = cliente
                 if cliente_selecionado == None:
@@ -79,6 +79,7 @@ class ControlePedido:
                     self.__tela_pedido.mensagem("Pizzas não encontradas")
                     return
 
+                self.__dao_pedido.remove(pedido.id)
                 pedido.cliente = cliente_selecionado
                 pedido.endereco = retorno["endereco"]
                 pedido.pagamento = retorno["pagamento"]
@@ -86,7 +87,8 @@ class ControlePedido:
                     pedido.excluir_pizza(pizza)
                 for pizza in pizzas:
                     pedido.incluir_pizza(pizza)
-
+                
+                self.__dao_pedido.add(pedido)
                 self.__tela_pedido.mensagem("Pedido alterado com sucesso")
                 return
         else:
@@ -94,16 +96,16 @@ class ControlePedido:
 
     def excluir(self):
         id = self.__tela_pedido.pegar_id()
-        for pedido in self.__pedidos:
+        for pedido in self.__dao_pedido.get_all():
             if pedido.id == int(id['id']):
-                self.__pedidos.remove(pedido)
+                self.__dao_pedido.remove(pedido.id)
                 self.__tela_pedido.mensagem("Pedido excluido com sucesso")
                 return
         else:
             self.__tela_pedido.mensagem("Pedido não encontrado")
 
     def listar(self):
-        if self.__pedidos:
-            self.__tela_pedido.mostrar_pedido(self.__pedidos)
+        if self.__dao_pedido.get_all():
+            self.__tela_pedido.mostrar_pedido(self.__dao_pedido.get_all())
         else:
             self.__tela_pedido.mensagem("Sem pedidos")
